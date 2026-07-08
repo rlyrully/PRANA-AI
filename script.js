@@ -1,16 +1,25 @@
 const API_KEY =
-"MASUKKAN_API_KEY_DEEPSEEK";
+"sk-e6f25142ec5c422c8a1a18174ea892d5";
+
+
+const memory =
+new Memory();
+
 
 
 async function send(){
 
 
 let input =
-document.getElementById("input");
+document.getElementById(
+"input"
+);
 
 
 let chat =
-document.getElementById("chat");
+document.getElementById(
+"chat"
+);
 
 
 
@@ -29,51 +38,80 @@ ${question}
 
 
 
+memory.save(
+"user",
+question
+);
+
+
+
+
 let response =
 await fetch(
+
 "https://api.deepseek.com/chat/completions",
+
 {
+
 
 method:"POST",
 
+
 headers:{
+
 
 "Content-Type":
 "application/json",
 
+
 "Authorization":
-"Bearer "+API_KEY
+"Bearer "
++
+API_KEY
+
 
 },
 
 
+
 body:
+
 JSON.stringify({
+
 
 model:
 "deepseek-chat",
 
 
+
 messages:[
-{
-role:"system",
-content:
-"Kamu adalah PRANA AI, asisten pintar buatan Rully."
-},
+
 
 {
-role:"user",
-content:question
-}
+role:"system",
+
+content:
+`
+Nama kamu PRANA AI.
+Kamu ramah, pintar,
+dan punya ingatan.
+`
+},
+
+
+...memory.load()
+
 
 ]
 
 
 })
 
+
 }
 
 );
+
 
 
 
@@ -88,6 +126,13 @@ data.choices[0]
 
 
 
+memory.save(
+"assistant",
+answer
+);
+
+
+
 chat.innerHTML +=
 `
 <p>
@@ -95,6 +140,7 @@ chat.innerHTML +=
 ${answer}
 </p>
 `;
+
 
 
 input.value="";
